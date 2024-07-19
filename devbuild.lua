@@ -457,6 +457,14 @@ randomtab:AddToggle('keybinds', {
     end
 })
 
+randomtab:AddButton({
+    Text = 'rejoin server',
+    Func = function()
+        game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
+    end,
+    DoubleClick = false,
+})
+
 Library:SetWatermarkVisibility(true)
 
 local FrameTimer = tick()
