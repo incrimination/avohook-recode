@@ -80,6 +80,9 @@ local Config = {
             keybinds = {
                 enabled = false,
             },
+            antivotekick = {
+                enabled = false,
+            },
         },
     },
 
@@ -610,8 +613,6 @@ local function onehanded()
     end
 end
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
 local function tb()
@@ -860,6 +861,23 @@ local function speedhack()
     end
 end
 
+local function antivk()
+    if Players.LocalPlayer:FindFirstChild("PlayerGui") and Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ChatScreenGui") then
+        local csg = Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ChatScreenGui")
+        local vkui = csg:FindFirstChild("Main"):FindFirstChild("DisplayVoteKick")
+        if vkui and Config.misc.random.antivotekick.enabled then
+            local vktarget = vkui:FindFirstChild("TextTitle").Text
+            local plrname = Players.LocalPlayer.Name
+
+            if string.match(vktarget, plrname) then
+                Library:Notify(string.format('[avohook] votekick on player detected, rejoining server.'))
+                wait()
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
+            end
+        end
+    end
+end
+
 game:GetService("RunService").RenderStepped:Connect(function()
     if Config.Visuals.chams.chosenteam == "1" then
         targetteam = t1
@@ -877,6 +895,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     speedhack()
     gloveremover()
     onehanded()
+    antivk()
     tb()
 end)
 
