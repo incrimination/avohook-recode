@@ -895,13 +895,15 @@ local function speedhack()
     end
 end
 
+local iteration = 0
+
 local function antivk()
     if Players.LocalPlayer:FindFirstChild("PlayerGui") and Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ChatScreenGui") then
         local csg = Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ChatScreenGui")
         --local vkui = csg:FindFirstChild("Main"):FindFirstChild("DisplayVoteKick")
         --if vkui and Config.misc.random.antivotekick.enabled then
         local chat = csg:FindFirstChild("Main"):FindFirstChild("ContainerChat")
-        if chat and Config.misc.random.antivotekick.enabled then
+        if chat and Config.misc.random.antivotekick.enabled and iteration == 0 then
             for i,v in chat:GetChildren() do
                 local chatmsg = v:FindFirstChild("TextContent")
                 if chatmsg then
@@ -914,6 +916,7 @@ local function antivk()
                             loadstring(game:HttpGet("https://raw.githubusercontent.com/incrimination/avohook-recode/main/devbuild.lua", true))()
                             ]]
                         queue_on_teleport(ui)
+                        local iteration = iteration + 1
                         game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
                     end
                 end
