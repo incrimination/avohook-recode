@@ -287,7 +287,7 @@ localtab:AddToggle('zzz', {
     end
 })
 
-localtab:AddToggle('223', {
+localtab:AddToggle('str', {
     Text = 'weapon chams',
     Default = false, 
 
@@ -303,6 +303,12 @@ localtab:AddToggle('223', {
         Config.Visuals.wepmatchanger.color = Value
     end
 })
+
+Toggles.str:OnChanged(function()
+    if Config.Visuals.wepmatchanger.enabled == false then
+        Library:Notify(string.format('[avohook] Weapon material will reset upon respawn.'))
+    end
+end)
 
 localtab:AddDropdown('441', {
     Values = { 'Neon', 'ForceField' },
@@ -1024,10 +1030,10 @@ local function wepmat()
                     if Config.Visuals.wepmatchanger.enabled then
                         gunpart.Material = Config.Visuals.wepmatchanger.selectedmat
                         gunpart.Color = Config.Visuals.wepmatchanger.color
-                    else
+                    --[[else
                         if Config.Visuals.wepmatchanger.enabled == false then
                             gunpart.Material = "SmoothPlastic"
-                        end
+                        end]]
                     end
                 end
             end
