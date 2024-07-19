@@ -287,7 +287,7 @@ localtab:AddToggle('zzz', {
     end
 })
 
---[[localtab:AddToggle('str', {
+localtab:AddToggle('str', {
     Text = 'weapon chams',
     Default = false, 
 
@@ -320,7 +320,7 @@ localtab:AddDropdown('441', {
     Callback = function(Value)
         Config.Visuals.wepmatchanger.selectedmat = Value
     end
-})]]
+})
 
 Options.armcolor:SetValueRGB(Color3.fromRGB(255, 255, 255))
 
@@ -1021,7 +1021,7 @@ local function wepOL()
     end
 end
 
---[[local function wepmat()
+local function wepmat()
     local cam = game:GetService("Workspace"):FindFirstChildWhichIsA("Camera")
     for i,v in cam:GetDescendants() do
         if v:FindFirstChildWhichIsA("UnionOperation") then 
@@ -1035,7 +1035,7 @@ end
             end
         end
     end
-end]]
+end
 
 game:GetService("RunService").RenderStepped:Connect(function()
     if Config.Visuals.chams.chosenteam == "1" then
@@ -1057,7 +1057,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     antivk()
     bhop()
     wepOL()
-    --wepmat()
+    wepmat()
     tb()
 end)
 
