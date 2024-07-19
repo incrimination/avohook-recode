@@ -74,7 +74,10 @@ local Config = {
             speedhack = {
                 master = false,
                 amount = 5,
-            }
+            },
+            bhop = {
+                enabled = false,
+            },
         },
         random = {
             keybinds = {
@@ -429,6 +432,15 @@ movementtab:AddSlider('speeeedd', {
 
     Callback = function(Value)
         Config.misc.movement.speedhack.amount = Value
+    end
+})
+
+movementtab:AddToggle('hopz', {
+    Text = 'bhop',
+    Default = false, 
+
+    Callback = function(Value)
+        Config.misc.movement.speedhack.master = Value
     end
 })
 
@@ -910,6 +922,16 @@ local function antivk()
     end
 end
 
+local function bhop()
+    local player = fuck()
+    if player then
+        local human = player:FindFirstChild("Humanoid")
+        if Config.misc.movement.bhop.enabled and human then
+            player:FindFirstChild("Humanoid").Jump = Config.misc.movement.bhop.enabled
+        end
+    end
+end
+
 game:GetService("RunService").RenderStepped:Connect(function()
     if Config.Visuals.chams.chosenteam == "1" then
         targetteam = t1
@@ -928,6 +950,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     gloveremover()
     onehanded()
     antivk()
+    bhop()
     tb()
 end)
 
