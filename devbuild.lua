@@ -40,6 +40,15 @@ local Config = {
             armchams = 'neon',
             armcolor = Color3.fromRGB(255, 255, 255),
         },
+        wepoutline = {
+            enabled = false,
+            color = Color3.new(1,1,1)
+        },
+        wepmatchanger = {
+            enabled = false,
+            selectedmat = 'Neon',
+            color = Color3.new(1,1,1)
+        },
         world = {
             ambient = {
                 enabled = false,
@@ -258,6 +267,52 @@ localtab:AddDropdown('armmat', {
 
     Callback = function(Value)
         Config.Visuals.lplr.armchams = Value
+    end
+})
+
+localtab:AddToggle('zzz', {
+    Text = 'weapon outline',
+    Default = false, 
+
+    Callback = function(Value)
+        Config.Visuals.wepoutline.enabled = Value
+    end
+}):AddColorPicker('zzzz', {
+    Default = Color3.new(1, 1, 1), 
+    Title = 'weapon outline colorpicker',
+    Transparency = 1, 
+
+    Callback = function(Value)
+        Config.Visuals.wepoutline.color = Value
+    end
+})
+
+localtab:AddToggle('223', {
+    Text = 'weapon chams',
+    Default = false, 
+
+    Callback = function(Value)
+        Config.Visuals.wepmatchanger.enabled = Value
+    end
+}):AddColorPicker('ghayassnigga', {
+    Default = Color3.new(1, 1, 1), 
+    Title = 'weapon colorpicker',
+    Transparency = 1, 
+
+    Callback = function(Value)
+        Config.Visuals.wepmatchanger.color = Value
+    end
+})
+
+localtab:AddDropdown('441', {
+    Values = { 'Neon', 'ForceField' },
+    Default = 1, 
+    Multi = false, 
+
+    Text = 'mat selection',
+
+    Callback = function(Value)
+        Config.Visuals.wepmatchanger.selectedmat = Value
     end
 })
 
@@ -912,7 +967,7 @@ local function antivk()
                     if string.match(string.sub(chatmsg.Text,43,200), plrname) and string.match(string.sub(chatmsg.Text,34,42), consolecheck) then
                         Library:Notify(string.format('[avohook] votekick on player detected, serverhopping.'))
                         local ui = [[
-                            wait(2)
+                            wait(1)
                             loadstring(game:HttpGet("https://raw.githubusercontent.com/incrimination/avohook-recode/main/devbuild.lua", true))()
                             ]]
                         queue_on_teleport(ui)
@@ -931,6 +986,51 @@ local function bhop()
         local human = player:FindFirstChild("Humanoid")
         if Config.misc.movement.bhop.enabled and human then
             player:FindFirstChild("Humanoid").Jump = Config.misc.movement.bhop.enabled
+        end
+    end
+end
+
+local function wepOL()
+    local cam = game:GetService("Workspace"):FindFirstChildWhichIsA("Camera")
+    for i,v in cam:GetDescendants() do
+        if v:FindFirstChildWhichIsA("UnionOperation") then 
+            if Config.Visuals.wepoutline.enabled then
+                if v:FindFirstChild("Highlight") then
+                    v.Highlight.OutlineColor = Config.Visuals.wepoutline.color
+                    break
+                else
+                    local hl = Instance.new("Highlight", v)
+                    hl.OutlineTransparency = 0
+                    hl.OutlineColor = Config.Visuals.wepoutline.color
+                    hl.FillTransparency = 1
+                end
+            else
+                if Config.Visuals.wepoutline.enabled == false then
+                    if v:FindFirstChild("Highlight") then
+                        v.Highlight:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function wepmat()
+    local cam = game:GetService("Workspace"):FindFirstChildWhichIsA("Camera")
+    for i,v in cam:GetDescendants() do
+        if v:FindFirstChildWhichIsA("UnionOperation") then 
+            for _, gunpart in v:GetChildren() do
+                if not gunpart:IsA("Highlight") then
+                    if Config.Visuals.wepmatchanger.enabled then
+                        gunpart.Material = Config.Visuals.wepmatchanger.selectedmat
+                        gunpart.Color = Config.Visuals.wepmatchanger.color
+                    else
+                        if Config.Visuals.wepmatchanger.enabled == false then
+                            gunpart.Material = "SmoothPlastic"
+                        end
+                    end
+                end
+            end
         end
     end
 end
@@ -954,6 +1054,8 @@ game:GetService("RunService").RenderStepped:Connect(function()
     onehanded()
     antivk()
     bhop()
+    wepOL()
+    wepmat()
     tb()
 end)
 
