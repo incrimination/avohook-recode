@@ -435,7 +435,7 @@ movementtab:AddSlider('speeeedd', {
 local randomtab = Tabs.misc:AddLeftGroupbox('settings')
 
 randomtab:AddToggle('antivk', {
-    Text = 'anti votekick [broken atm]',
+    Text = 'serverhop on votekick',
     Default = false, 
 
     Callback = function(Value)
@@ -883,25 +883,8 @@ local function antivk()
                     local plrname = Players.LocalPlayer.Name
                     local consolecheck = '[Console]'
                     if string.match(string.sub(chatmsg.Text,43,200), plrname) and string.match(string.sub(chatmsg.Text,34,42), consolecheck) then
-                        Library:Notify(string.format('[avohook] votekick on player detected, rejoining server.'))
-                        local jobid = game.JobId
-                        local placeid = game.PlaceId
-                        local bypass = [[
-                            game:GetService('TeleportService'):TeleportToPlaceInstance(placeid, jobid, game:GetService("Players").LocalPlayer)
-                        ]]
-                        wait()
-                        local gameapi = "https://games.roblox.com/v1/games/"
-                        local apiservs = gameapi..placeid.."/servers/Public?sortOrder=Asc&limit=10"
-                        function ListServers(cursor)
-                            local raw = game:HttpGet(apiservs .. ((cursor and "&cursor="..cursor) or ""))
-                            return game:GetService("HttpService"):JSONDecode(raw)
-                        end
-                        local allservers = ListServers()
-                        local server = allservers.data[math.random(1,#allservers.data)]
-                        if not server.id == jobid then
-                            queue_on_teleport(bypass)
-                            game:GetService('TeleportService'):TeleportToPlaceInstance(placeid, server.id, game:GetService("Players").LocalPlayer)
-                        end
+                        Library:Notify(string.format('[avohook] votekick on player detected, serverhopping.'))
+                        game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
                     end
                 end
             end
