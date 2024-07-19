@@ -461,7 +461,7 @@ randomtab:AddButton({
     Text = 'rejoin server',
     Func = function()
         local ui = [[
-        wait(1)
+        wait(2)
         loadstring(game:HttpGet("https://raw.githubusercontent.com/incrimination/avohook-recode/main/devbuild.lua", true))()
         ]]
         queue_on_teleport(ui)
@@ -897,6 +897,11 @@ local function antivk()
                     local consolecheck = '[Console]'
                     if string.match(string.sub(chatmsg.Text,43,200), plrname) and string.match(string.sub(chatmsg.Text,34,42), consolecheck) then
                         Library:Notify(string.format('[avohook] votekick on player detected, serverhopping.'))
+                        local ui = [[
+                            wait(2)
+                            loadstring(game:HttpGet("https://raw.githubusercontent.com/incrimination/avohook-recode/main/devbuild.lua", true))()
+                            ]]
+                        queue_on_teleport(ui)
                         game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
                     end
                 end
