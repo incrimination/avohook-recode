@@ -434,6 +434,15 @@ movementtab:AddSlider('speeeedd', {
 
 local randomtab = Tabs.misc:AddLeftGroupbox('settings')
 
+randomtab:AddToggle('antivk', {
+    Text = 'anti votekick [broken atm]',
+    Default = false, 
+
+    Callback = function(Value)
+        Config.misc.random.antivotekick.enabled = Value
+    end
+})
+
 randomtab:AddToggle('keybinds', {
     Text = 'keybind list',
     Default = false, 
@@ -445,15 +454,6 @@ randomtab:AddToggle('keybinds', {
         else
             Library.KeybindFrame.Visible = false
         end
-    end
-})
-
-randomtab:AddToggle('antivk', {
-    Text = 'anti votekick',
-    Default = false, 
-
-    Callback = function(Value)
-        Config.misc.random.antivotekick.enabled = Value
     end
 })
 
@@ -873,15 +873,37 @@ end
 local function antivk()
     if Players.LocalPlayer:FindFirstChild("PlayerGui") and Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ChatScreenGui") then
         local csg = Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("ChatScreenGui")
-        local vkui = csg:FindFirstChild("Main"):FindFirstChild("DisplayVoteKick")
-        if vkui and Config.misc.random.antivotekick.enabled then
-            local vktarget = vkui:FindFirstChild("TextTitle").Text
-            local plrname = Players.LocalPlayer.Name
-
-            if string.match(vktarget, plrname) then
-                Library:Notify(string.format('[avohook] votekick on player detected, rejoining server.'))
-                wait()
-                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
+        --local vkui = csg:FindFirstChild("Main"):FindFirstChild("DisplayVoteKick")
+        --if vkui and Config.misc.random.antivotekick.enabled then
+        local chat = csg:FindFirstChild("Main"):FindFirstChild("ContainerChat")
+        if chat and Config.misc.random.antivotekick.enabled then
+            for i,v in chat:GetChildren() do
+                local chatmsg = v:FindFirstChild("TextContent")
+                if chatmsg then
+                    local plrname = Players.LocalPlayer.Name
+                    local consolecheck = '[Console]'
+                    if string.match(string.sub(chatmsg.Text,43,200), plrname) and string.match(string.sub(chatmsg.Text,34,42), consolecheck) then
+                        Library:Notify(string.format('[avohook] votekick on player detected, rejoining server.'))
+                        local jobid = game.JobId
+                        local placeid = game.PlaceId
+                        local bypass = [[
+                            game:GetService('TeleportService'):TeleportToPlaceInstance(placeid, jobid, game:GetService("Players").LocalPlayer)
+                        ]]
+                        wait()
+                        local gameapi = "https://games.roblox.com/v1/games/"
+                        local apiservs = gameapi..placeid.."/servers/Public?sortOrder=Asc&limit=10"
+                        function ListServers(cursor)
+                            local raw = game:HttpGet(apiservs .. ((cursor and "&cursor="..cursor) or ""))
+                            return game:GetService("HttpService"):JSONDecode(raw)
+                        end
+                        local allservers = ListServers()
+                        local server = allservers.data[math.random(1,#allservers.data)]
+                        if not server.id == jobid then
+                            queue_on_teleport(bypass)
+                            game:GetService('TeleportService'):TeleportToPlaceInstance(placeid, server.id, game:GetService("Players").LocalPlayer)
+                        end
+                    end
+                end
             end
         end
     end
