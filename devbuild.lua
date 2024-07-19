@@ -495,7 +495,7 @@ movementtab:AddToggle('hopz', {
     Default = false, 
 
     Callback = function(Value)
-        Config.misc.movement.speedhack.master = Value
+        Config.misc.movement.bhop.enabled = Value
     end
 })
 
