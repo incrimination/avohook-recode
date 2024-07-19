@@ -448,6 +448,15 @@ randomtab:AddToggle('keybinds', {
     end
 })
 
+randomtab:AddToggle('antivk', {
+    Text = 'anti votekick',
+    Default = false, 
+
+    Callback = function(Value)
+        Config.misc.random.antivotekick.enabled = Value
+    end
+})
+
 Library:SetWatermarkVisibility(true)
 
 local FrameTimer = tick()
