@@ -460,6 +460,11 @@ randomtab:AddToggle('keybinds', {
 randomtab:AddButton({
     Text = 'rejoin server',
     Func = function()
+        local ui = [[
+        wait(1)
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/incrimination/avohook-recode/main/devbuild.lua", true))()
+        ]]
+        queue_on_teleport(ui)
         game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
     end,
     DoubleClick = false,
